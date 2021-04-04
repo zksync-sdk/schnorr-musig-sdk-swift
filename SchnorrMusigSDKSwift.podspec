@@ -21,15 +21,6 @@ TODO: Add long description of the pod here.
   s.source_files = 'SchnorrMusigSDKSwift/**/*.{swift,h}'
   
   s.vendored_libraries = "SchnorrMusigSDKSwift/Lib/*.{a}"
-  # spec.module_map = "ZKSyncSDK/ZKSyncSDK/ZKSyncSDK.modulemap"
-
-  # spec.xcconfig = { :VALID_ARCHS => 'arm64 arm64e armv7 armv7s x86_64' }
+  
   s.pod_target_xcconfig = { :VALID_ARCHS => 'arm64 arm64e armv7 armv7s x86_64' }
-  # s.resource_bundles = {
-  #   'SchnorrMusigSDKSwift' => ['SchnorrMusigSDKSwift/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
