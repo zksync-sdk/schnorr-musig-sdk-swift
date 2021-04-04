@@ -15,15 +15,23 @@ public class SchnorrMusigSigner {
         self.signer = signer
     }
     
-    func sign(privateKey: Data, message: Data) -> SMSignature {
+    func sign(privateKey: Data, message: Data) throws -> SMSignature {
         
         var signature: Signature = Signature()
         
-        return privateKey.withUnsafeBytes { (privateKeyRaw) in
+        return try privateKey.withUnsafeBytes { (privateKeyRaw) in
             let privateKeyBuffer = privateKeyRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
-            return message.withUnsafeBytes { (messageRaw) in
+            
+            return try message.withUnsafeBytes { (messageRaw) in
+                
                 let messageBuffer = messageRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
+                
                 let result = schnorr_musig_sign(signer, privateKeyBuffer, privateKey.count, messageBuffer, message.count, &signature)
+                
+                guard result == OK else {
+                    throw SchnorrMusigError(code: result)
+                }
+                
                 return withUnsafeBytes(of: &signature) { (pointer) in
                     return SMSignature(Data(pointer))
                 }
@@ -31,63 +39,91 @@ public class SchnorrMusigSigner {
         }
     }
     
-    func computePrecommitment(seed: [UInt32]) -> SMPrecommitment {
-        seed.withUnsafeBufferPointer { (seedRaw) in
+    func computePrecommitment(seed: [UInt32]) throws -> SMPrecommitment {
+        try seed.withUnsafeBufferPointer { (seedRaw) in
+            
             var precommitment = Precommitment()
-            schnorr_musig_compute_precommitment(signer, seedRaw.baseAddress!, seed.count, &precommitment)
+            
+            let result = schnorr_musig_compute_precommitment(signer, seedRaw.baseAddress!, seed.count, &precommitment)
+            
+            guard result == OK else {
+                throw SchnorrMusigError(code: result)
+            }
+            
             return withUnsafeBytes(of: &precommitment) { (pointer) in
                 SMPrecommitment(Data(pointer))
             }
         }
     }
     
-    func receivePrecommitments(_ precommitments: SMPrecommitment...) -> SMCommitment {
-        return self.receivePrecommitments(precommitments)
+    func receivePrecommitments(_ precommitments: SMPrecommitment...) throws -> SMCommitment {
+        return try self.receivePrecommitments(precommitments)
     }
     
-    func receivePrecommitments(_ precommitments: [SMPrecommitment]) -> SMCommitment {
+    func receivePrecommitments(_ precommitments: [SMPrecommitment]) throws -> SMCommitment {
         let data = precommitments.joinedData
         
-        return data.withUnsafeBytes { (raw) in
+        return try data.withUnsafeBytes { (raw) in
+            
             let pointer = raw.baseAddress!.assumingMemoryBound(to: UInt8.self)
             var commitment = Commitment()
-            schnorr_musig_receive_precommitments(signer, pointer, data.count, &commitment)
+            
+            let result = schnorr_musig_receive_precommitments(signer, pointer, data.count, &commitment)
+            
+            guard result == OK else {
+                throw SchnorrMusigError(code: result)
+            }
+            
             return  withUnsafeBytes(of: &commitment) { (pointer) in
                 SMCommitment(Data(pointer))
             }
         }
     }
     
-    func receiveCommitments(_ commitments: SMCommitment...) -> SMAggregatedCommitment {
-        return self.receiveCommitments(commitments)
+    func receiveCommitments(_ commitments: SMCommitment...) throws -> SMAggregatedCommitment {
+        return try self.receiveCommitments(commitments)
     }
     
-    func receiveCommitments(_ commitments: [SMCommitment]) -> SMAggregatedCommitment {
+    func receiveCommitments(_ commitments: [SMCommitment]) throws -> SMAggregatedCommitment {
         let data = commitments.joinedData
         
-        return data.withUnsafeBytes { (raw) in
+        return try data.withUnsafeBytes { (raw) in
+            
             let pointer = raw.baseAddress!.assumingMemoryBound(to: UInt8.self)
             var aggregatedCommitment = AggregatedCommitment()
-            schnorr_musig_receive_commitments(signer, pointer, data.count, &aggregatedCommitment)
+            
+            let result = schnorr_musig_receive_commitments(signer, pointer, data.count, &aggregatedCommitment)
+            
+            guard result == OK else {
+                throw SchnorrMusigError(code: result)
+            }
+            
             return  withUnsafeBytes(of: &aggregatedCommitment) { (pointer) in
                 SMAggregatedCommitment(Data(pointer))
             }
         }
     }
     
-    func aggregateSignature(_ signatures: SMSignature...) -> SMAggregatedSignature {
-        return aggregateSignature(signatures)
+    func aggregateSignature(_ signatures: SMSignature...) throws -> SMAggregatedSignature {
+        return try self.aggregateSignature(signatures)
     }
     
-    func aggregateSignature(_ signatures: [SMSignature]) -> SMAggregatedSignature {
+    func aggregateSignature(_ signatures: [SMSignature]) throws -> SMAggregatedSignature {
         let signaturesData = signatures.joinedData
-        return signaturesData.withUnsafeBytes { (signaturesRaw) in
+        return try signaturesData.withUnsafeBytes { (signaturesRaw) in
+            
             let signaturesPointer = signaturesRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
             var aggregatedSignature = AggregatedSignature()
-            schnorr_musig_receive_signature_shares(signer,
-                                                   signaturesPointer,
-                                                   signaturesData.count,
-                                                   &aggregatedSignature)
+            
+            let result = schnorr_musig_receive_signature_shares(signer,
+                                                                signaturesPointer,
+                                                                signaturesData.count,
+                                                                &aggregatedSignature)
+            
+            guard result == OK else {
+                throw SchnorrMusigError(code: result)
+            }
+            
             return withUnsafeBytes(of: &aggregatedSignature) { (pointer) in
                 SMAggregatedSignature(Data(pointer))
             }

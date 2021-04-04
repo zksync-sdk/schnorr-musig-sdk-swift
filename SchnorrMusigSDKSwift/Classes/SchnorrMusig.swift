@@ -25,22 +25,22 @@ public class SchnorrMusig {
         }
     }
 
-    public func verify(message: Data, signature: SMAggregatedSignature, aggregatedPublicKeys: SMAggregatedPublicKey) -> Bool {
-        self.verify(message: message, signature: signature, encodedPublicKeys: aggregatedPublicKeys.data())
+    public func verify(message: Data, signature: SMAggregatedSignature, aggregatedPublicKeys: SMAggregatedPublicKey) throws -> Bool {
+        return try self.verify(message: message, signature: signature, encodedPublicKeys: aggregatedPublicKeys.data())
     }
     
-    public func verify(message: Data, signature: SMAggregatedSignature, publicKeys: [Data]) -> Bool {
+    public func verify(message: Data, signature: SMAggregatedSignature, publicKeys: [Data]) throws -> Bool {
         let encodedKeys = publicKeys.reduce(into: Data()) { $0.append($1) }
-        return self.verify(message: message, signature: signature, encodedPublicKeys: encodedKeys)
+        return try self.verify(message: message, signature: signature, encodedPublicKeys: encodedKeys)
     }
     
-    public func verify(message: Data, signature: SMAggregatedSignature, encodedPublicKeys: Data) -> Bool {
+    public func verify(message: Data, signature: SMAggregatedSignature, encodedPublicKeys: Data) throws -> Bool {
         let signatureData = signature.data()
-        return message.withUnsafeBytes { (messageRaw) -> Bool in
+        return try message.withUnsafeBytes { (messageRaw) -> Bool in
             let messagePointer = messageRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
-            return signatureData.withUnsafeBytes { (signatureRaw) -> Bool in
+            return try signatureData.withUnsafeBytes { (signatureRaw) -> Bool in
                 let signaturePointer = signatureRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
-                return encodedPublicKeys.withUnsafeBytes { (publicKeysRaw) -> Bool in
+                return try encodedPublicKeys.withUnsafeBytes { (publicKeysRaw) -> Bool in
                     let publicKeysPointer = publicKeysRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
                     
                     let result = schnorr_musig_verify(messagePointer,
@@ -50,23 +50,34 @@ public class SchnorrMusig {
                                                       signaturePointer,
                                                       signatureData.count)
                     
-                    return result == OK
+                    if result == OK {
+                        return true
+                    } else if result == SIGNATURE_VERIFICATION_FAILED {
+                        return false
+                    } else {
+                        throw SchnorrMusigError(code: result)
+                    }
                 }
             }
         }
     }
     
-    public func aggregatePublicKeys(_ publicKeys: [Data]) -> SMAggregatedPublicKey {
+    public func aggregatePublicKeys(_ publicKeys: [Data]) throws -> SMAggregatedPublicKey {
         let publicKeys = publicKeys.reduce(into: Data()) { $0.append($1) }
-        return self.aggregatePublicKeys(publicKeys)
+        return try self.aggregatePublicKeys(publicKeys)
     }
     
-    public func aggregatePublicKeys(_ encodedPublicKeys: Data) -> SMAggregatedPublicKey {
+    public func aggregatePublicKeys(_ encodedPublicKeys: Data) throws -> SMAggregatedPublicKey {
         
-        encodedPublicKeys.withUnsafeBytes { (publicKeysRaw) in
+        try encodedPublicKeys.withUnsafeBytes { (publicKeysRaw) in
             let publicKeysPointer = publicKeysRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
             var aggregatedPublicKey = AggregatedPublicKey()
-            schnorr_musig_aggregate_pubkeys(publicKeysPointer, encodedPublicKeys.count, &aggregatedPublicKey)
+            let result = schnorr_musig_aggregate_pubkeys(publicKeysPointer, encodedPublicKeys.count, &aggregatedPublicKey)
+            
+            guard result == OK else {
+                throw SchnorrMusigError(code: result)
+            }
+            
             return withUnsafeBytes(of: &aggregatedPublicKey) { (pointer) in
                 return SMAggregatedPublicKey(Data(pointer))
             }

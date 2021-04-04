@@ -8,7 +8,7 @@ class SchnorrMusigTests: XCTestCase {
         "hello".data(using: .utf8)!
     }
     
-    func testSingle() {
+    func testSingle() throws {
         
         let expectedPrecommitment = "93ae6e6df739d76c088755078ed857e95119909c97bdd5cdc8aa12286abc0984"
         let expectedCommitment = "a18005f171a323d022a625e71aa53864ca6d1851a1fc50585b7627fba3f6c69f"
@@ -22,34 +22,34 @@ class SchnorrMusigTests: XCTestCase {
         let publicKeyData = publicKey.withUnsafeBytes { (buffer) in
             return Data(buffer)
         }
-
+        
         let privateKeyData = privateKey.withUnsafeBytes { (buffer) in
             return Data(buffer)
         }
-
+        
         let schnorrMuisig = SchnorrMusig()
         let signer = schnorrMuisig.createSigner(encodedPublicKeys: publicKeyData, position: 0)
-        let precommitment = signer.computePrecommitment(seed: Self.Seed)
+        let precommitment = try signer.computePrecommitment(seed: Self.Seed)
         XCTAssertEqual(precommitment.hexEncodedString().lowercased(),
                        expectedPrecommitment)
-        let commitment = signer.receivePrecommitments([precommitment])
+        let commitment = try signer.receivePrecommitments([precommitment])
         XCTAssertEqual(commitment.hexEncodedString().lowercased(),
                        expectedCommitment)
-        let aggregatedCommitment = signer.receiveCommitments([commitment])
+        let aggregatedCommitment = try signer.receiveCommitments([commitment])
         XCTAssertEqual(aggregatedCommitment.hexEncodedString().lowercased(),
                        expectedAggregatedCommitment)
-        let signature = signer.sign(privateKey: privateKeyData, message: message)
+        let signature = try signer.sign(privateKey: privateKeyData, message: message)
         XCTAssertEqual(signature.hexEncodedString().lowercased(),
                        expectedSignature)
         
-        let aggregateSignature = signer.aggregateSignature(signature)
+        let aggregateSignature = try signer.aggregateSignature(signature)
         
-        XCTAssertTrue(schnorrMuisig.verify(message: message,
-                                           signature: aggregateSignature,
-                                           encodedPublicKeys: publicKeyData))
+        XCTAssertTrue(try schnorrMuisig.verify(message: message,
+                                               signature: aggregateSignature,
+                                               encodedPublicKeys: publicKeyData))
     }
     
-    func testMultiple() {
+    func testMultiple() throws {
         
         let privateKeys: [[Int8]] = [
             [1,31,91,-103,8,76,92,46,45,94,99,72,-114,15,113,104,-43,-103,-91,-64,31,-23,-2,-60,-55,-106,5,116,61,-91,-24,92],
@@ -65,7 +65,7 @@ class SchnorrMusigTests: XCTestCase {
             [63,6,62,-21,40,-71,18,-96,89,-4,-118,-116,100,33,-20,89,-51,45,-113,42,25,64,43,9,125,120,-33,-118,56,100,-9,15],
             [40,107,64,71,20,-37,-122,117,29,-110,92,118,-49,119,7,9,-105,-28,-120,101,-100,74,-65,116,-52,114,-102,55,17,-68,27,-92]
         ]
-
+        
         let schnorrMuisig = SchnorrMusig()
         
         let allPublicKeys = publicKeys.reduce(into: Data()) { (data, publicKey) in
@@ -76,36 +76,36 @@ class SchnorrMusigTests: XCTestCase {
             schnorrMuisig.createSigner(encodedPublicKeys: allPublicKeys, position: position)
         }
         
-        let precommitments = signers.map { (signer) -> SMPrecommitment in
-            return signer.computePrecommitment(seed: Self.Seed)
+        let precommitments = try signers.map { (signer) -> SMPrecommitment in
+            return try signer.computePrecommitment(seed: Self.Seed)
         }
         XCTAssertTrue(precommitments.verify())
         
-        let commitments = signers.map { (signer) -> SMCommitment in
-            return signer.receivePrecommitments(precommitments)
+        let commitments = try signers.map { (signer) -> SMCommitment in
+            return try signer.receivePrecommitments(precommitments)
         }
         XCTAssertTrue(commitments.verify())
         
-        let aggregatedCommitments = signers.map { (signer) -> SMAggregatedCommitment in
-            return signer.receiveCommitments(commitments)
+        let aggregatedCommitments = try signers.map { (signer) -> SMAggregatedCommitment in
+            return try signer.receiveCommitments(commitments)
         }
         XCTAssertTrue(aggregatedCommitments.verify())
-                
-        let signatures = (0..<signers.count).map { (position) -> SMSignature in
+        
+        let signatures = try (0..<signers.count).map { (position) -> SMSignature in
             let privateKey = privateKeys[position].withUnsafeBytes { Data($0) }
-            return signers[position].sign(privateKey: privateKey, message: Self.Msg)
+            return try signers[position].sign(privateKey: privateKey, message: Self.Msg)
         }
         
-        let aggregatedSignatures = signers.map { (signer) -> SMAggregatedSignature in
-            return signer.aggregateSignature(signatures)
+        let aggregatedSignatures = try signers.map { (signer) -> SMAggregatedSignature in
+            return try signer.aggregateSignature(signatures)
         }
         XCTAssertTrue(aggregatedSignatures.verify())
-
-        let aggregatedPublicKey = schnorrMuisig.aggregatePublicKeys(allPublicKeys)
         
-        XCTAssertTrue(schnorrMuisig.verify(message: Self.Msg, signature: aggregatedSignatures[0], encodedPublicKeys: allPublicKeys))
+        let aggregatedPublicKey = try schnorrMuisig.aggregatePublicKeys(allPublicKeys)
         
-        XCTAssertTrue(schnorrMuisig.verify(message: Self.Msg, signature: aggregatedSignatures[0], aggregatedPublicKeys: aggregatedPublicKey))
+        XCTAssertTrue(try schnorrMuisig.verify(message: Self.Msg, signature: aggregatedSignatures[0], encodedPublicKeys: allPublicKeys))
+        
+        XCTAssertTrue(try schnorrMuisig.verify(message: Self.Msg, signature: aggregatedSignatures[0], aggregatedPublicKeys: aggregatedPublicKey))
     }
 }
 
