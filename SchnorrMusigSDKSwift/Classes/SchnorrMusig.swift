@@ -9,16 +9,15 @@ import Foundation
 
 
 public class SchnorrMusig {
-//    public SchnorrMusigSigner createSigner(byte[] encodedPublicKeys, int position) {
-//        Pointer signer = this.musig.schnorr_musig_new_signer(encodedPublicKeys, encodedPublicKeys.length, position);
-//        return new SchnorrMusigSigner(this.musig, new MusigSigner(signer));
-//    }
 
+    public func createSigner(publicKeys: [Data], position: Int) -> SchnorrMusigSigner {
+        return createSigner(encodedPublicKeys: publicKeys.joined(), position: position)
+    }
+    
     public func createSigner(encodedPublicKeys: Data, position: Int) -> SchnorrMusigSigner {
         encodedPublicKeys.withUnsafeBytes { (encodedPublicKeysRaw) in
             let encodedPublicKeysBuffer = encodedPublicKeysRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
             let musig = schnorr_musig_new_signer(encodedPublicKeysBuffer, encodedPublicKeys.count, position)
-            
             return SchnorrMusigSigner(signer: musig!)
         }
     }
