@@ -12,7 +12,7 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		607FACEC1AFB9204008FA782 /* SchnorrMusigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* SchnorrMusigTests.swift */; };
 		6BD17204EDDB6112912E19EB /* Pods_SchnorrMusigSDKSwift_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8DBF4DE9B4FE3A496E4E2AA /* Pods_SchnorrMusigSDKSwift_Tests.framework */; };
 		81779526B9F4F6A04CAB20B8 /* Pods_SchnorrMusigSDKSwift_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26ADE12C5DC8D3B4BE44CD47 /* Pods_SchnorrMusigSDKSwift_Example.framework */; };
 /* End PBXBuildFile section */
@@ -38,7 +38,7 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* SchnorrMusigSDKSwift_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SchnorrMusigSDKSwift_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
+		607FACEB1AFB9204008FA782 /* SchnorrMusigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchnorrMusigTests.swift; sourceTree = "<group>"; };
 		69F18D6AA06AEE38F0C96B2A /* SchnorrMusigSDKSwift.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SchnorrMusigSDKSwift.podspec; path = ../SchnorrMusigSDKSwift.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		7D412AEA57E5F0917DCF4AA6 /* Pods-SchnorrMusigSDKSwift_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SchnorrMusigSDKSwift_Example.release.xcconfig"; path = "Target Support Files/Pods-SchnorrMusigSDKSwift_Example/Pods-SchnorrMusigSDKSwift_Example.release.xcconfig"; sourceTree = "<group>"; };
 		9FA9B8F28506513225AB3A42 /* Pods-SchnorrMusigSDKSwift_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SchnorrMusigSDKSwift_Example.debug.xcconfig"; path = "Target Support Files/Pods-SchnorrMusigSDKSwift_Example/Pods-SchnorrMusigSDKSwift_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
+				607FACEB1AFB9204008FA782 /* SchnorrMusigTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
 			path = Tests;
@@ -340,7 +340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				607FACEC1AFB9204008FA782 /* SchnorrMusigTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

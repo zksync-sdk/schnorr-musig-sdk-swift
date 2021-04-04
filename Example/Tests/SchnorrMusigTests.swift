@@ -1,14 +1,14 @@
 import XCTest
 @testable import SchnorrMusigSDKSwift
 
-class Tests: XCTestCase {
+class SchnorrMusigTests: XCTestCase {
     
     private static let Seed: [UInt32] = [16807, 282475249, 1622650073, 984943658]
     private static var Msg: Data {
         "hello".data(using: .utf8)!
     }
     
-    func testExample() {
+    func testSingle() {
         
         let expectedPrecommitment = "93ae6e6df739d76c088755078ed857e95119909c97bdd5cdc8aa12286abc0984"
         let expectedCommitment = "a18005f171a323d022a625e71aa53864ca6d1851a1fc50585b7627fba3f6c69f"

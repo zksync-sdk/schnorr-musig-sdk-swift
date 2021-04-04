@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 public class SchnorrMusigSigner {
     
     var signer: UnsafeMutablePointer<MusigSigner>

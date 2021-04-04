@@ -23,4 +23,5 @@ TODO: Add long description of the pod here.
   s.vendored_libraries = "SchnorrMusigSDKSwift/Lib/*.{a}"
   
   s.pod_target_xcconfig = { :VALID_ARCHS => 'arm64 arm64e armv7 armv7s x86_64' }
+
 end

@@ -10,6 +10,8 @@ import Foundation
 
 public class SchnorrMusig {
 
+    public init() {}
+    
     public func createSigner(publicKeys: [Data], position: Int) -> SchnorrMusigSigner {
         let encodedKeys = publicKeys.reduce(into: Data()) { $0.append($1) }
         return createSigner(encodedPublicKeys: encodedKeys, position: position)
@@ -70,23 +72,4 @@ public class SchnorrMusig {
             }
         }
     }
-    
-//    public AggregatedPublicKey aggregatePublicKeys(List<byte[]> publicKeys) throws SchnorrMusigException {
-//        return aggregatePublicKeys(Bytes.join(publicKeys));
-//    }
-//
-//    public AggregatedPublicKey aggregatePublicKeys(byte[] encodedPublicKeys) throws SchnorrMusigException {
-//        AggregatedPublicKey.ByReference aggregatedPublicKey = new AggregatedPublicKey.ByReference();
-//
-//        int code = this.musig.schnorr_musig_aggregate_pubkeys(encodedPublicKeys, encodedPublicKeys.length, aggregatedPublicKey);
-//
-//        SchnorrMusigResultCodes result = SchnorrMusigResultCodes.byCode(code);
-//
-//        if (result == SchnorrMusigResultCodes.OK) {
-//            return aggregatedPublicKey;
-//        } else {
-//            throw new SchnorrMusigException(result);
-//        }
-//    }
-
 }
