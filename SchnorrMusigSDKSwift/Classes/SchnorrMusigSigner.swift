@@ -32,21 +32,6 @@ public class SchnorrMusigSigner {
         }
     }
     
-//    public Precommitment computePrecommitment(int[] seed) throws SchnorrMusigException {
-//        Precommitment.ByReference precommitment = new Precommitment.ByReference();
-//
-//        int code = this.musig.schnorr_musig_compute_precommitment(this.signer.getPointer(), seed, seed.length,
-//                precommitment);
-//
-//        SchnorrMusigResultCodes result = SchnorrMusigResultCodes.byCode(code);
-//
-//        if (result == SchnorrMusigResultCodes.OK) {
-//            return precommitment;
-//        } else {
-//            throw new SchnorrMusigException(result);
-//        }
-//    }
-
     func computePrecommitment(seed: [UInt32]) -> SMPrecommitment {
         seed.withUnsafeBufferPointer { (seedRaw) in
             var precommitment = Precommitment()
@@ -72,6 +57,10 @@ public class SchnorrMusigSigner {
                 SMCommitment(Data(pointer))
             }
         }
+    }
+    
+    func receiveCommitments(_ commitments: SMCommitment...) -> SMAggregatedCommitment {
+        return self.receiveCommitments(commitments)
     }
     
     func receiveCommitments(_ commitments: [SMCommitment]) -> SMAggregatedCommitment {
