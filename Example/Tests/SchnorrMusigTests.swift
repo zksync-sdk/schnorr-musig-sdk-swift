@@ -27,8 +27,8 @@ class SchnorrMusigTests: XCTestCase {
             return Data(buffer)
         }
         
-        let schnorrMuisig = SchnorrMusig()
-        let signer = schnorrMuisig.createSigner(encodedPublicKeys: publicKeyData, position: 0)
+        let schnorrMusig = SchnorrMusig()
+        let signer = schnorrMusig.createSigner(encodedPublicKeys: publicKeyData, position: 0)
         let precommitment = try signer.computePrecommitment(seed: Self.Seed)
         XCTAssertEqual(precommitment.hexEncodedString().lowercased(),
                        expectedPrecommitment)
@@ -44,9 +44,9 @@ class SchnorrMusigTests: XCTestCase {
         
         let aggregateSignature = try signer.aggregateSignature(signature)
         
-        XCTAssertTrue(try schnorrMuisig.verify(message: message,
-                                               signature: aggregateSignature,
-                                               encodedPublicKeys: publicKeyData))
+        XCTAssertTrue(try schnorrMusig.verify(message: message,
+                                              signature: aggregateSignature,
+                                              encodedPublicKeys: publicKeyData))
     }
     
     func testMultiple() throws {
@@ -66,14 +66,14 @@ class SchnorrMusigTests: XCTestCase {
             [40,107,64,71,20,-37,-122,117,29,-110,92,118,-49,119,7,9,-105,-28,-120,101,-100,74,-65,116,-52,114,-102,55,17,-68,27,-92]
         ]
         
-        let schnorrMuisig = SchnorrMusig()
+        let schnorrMusig = SchnorrMusig()
         
         let allPublicKeys = publicKeys.reduce(into: Data()) { (data, publicKey) in
             data.append(publicKey.withUnsafeBytes { Data($0) })
         }
         
         let signers = (0..<publicKeys.count).map { (position) -> SchnorrMusigSigner in
-            schnorrMuisig.createSigner(encodedPublicKeys: allPublicKeys, position: position)
+            schnorrMusig.createSigner(encodedPublicKeys: allPublicKeys, position: position)
         }
         
         let precommitments = try signers.map { (signer) -> SMPrecommitment in
@@ -101,11 +101,11 @@ class SchnorrMusigTests: XCTestCase {
         }
         XCTAssertTrue(aggregatedSignatures.verify())
         
-        let aggregatedPublicKey = try schnorrMuisig.aggregatePublicKeys(allPublicKeys)
+        let aggregatedPublicKey = try schnorrMusig.aggregatePublicKeys(allPublicKeys)
         
-        XCTAssertTrue(try schnorrMuisig.verify(message: Self.Msg, signature: aggregatedSignatures[0], encodedPublicKeys: allPublicKeys))
+        XCTAssertTrue(try schnorrMusig.verify(message: Self.Msg, signature: aggregatedSignatures[0], encodedPublicKeys: allPublicKeys))
         
-        XCTAssertTrue(try schnorrMuisig.verify(message: Self.Msg, signature: aggregatedSignatures[0], aggregatedPublicKeys: aggregatedPublicKey))
+        XCTAssertTrue(try schnorrMusig.verify(message: Self.Msg, signature: aggregatedSignatures[0], aggregatedPublicKeys: aggregatedPublicKey))
     }
 }
 
