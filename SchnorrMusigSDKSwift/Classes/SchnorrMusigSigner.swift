@@ -75,6 +75,25 @@ public class SchnorrMusigSigner {
             }
         }
     }
+    
+    func aggregateSignature(_ signatures: SMSignature...) -> SMAggregatedSignature {
+        return aggregateSignature(signatures)
+    }
+    
+    func aggregateSignature(_ signatures: [SMSignature]) -> SMAggregatedSignature {
+        let signaturesData = signatures.joinedData
+        return signaturesData.withUnsafeBytes { (signaturesRaw) in
+            let signaturesPointer = signaturesRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
+            var aggregatedSignature = AggregatedSignature()
+            schnorr_musig_receive_signature_shares(signer,
+                                                   signaturesPointer,
+                                                   signaturesData.count,
+                                                   &aggregatedSignature)
+            return withUnsafeBytes(of: &aggregatedSignature) { (pointer) in
+                SMAggregatedSignature(Data(pointer))
+            }
+        }
+    }
 }
 
 extension Array where Element: SMPrimitive {

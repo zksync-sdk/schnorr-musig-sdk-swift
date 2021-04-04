@@ -42,7 +42,7 @@ public class SMPrimitive {
 }
 
 fileprivate let StandardEncodingLength = 32
-fileprivate let AggregateSignatureEncodingLength = 32
+fileprivate let AggregateSignatureEncodingLength = 64
 
 public class SMAggregatedPublicKey: SMPrimitive {
     override class var bytesLength: Int {
