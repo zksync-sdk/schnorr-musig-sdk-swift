@@ -11,7 +11,8 @@ import Foundation
 public class SchnorrMusig {
 
     public func createSigner(publicKeys: [Data], position: Int) -> SchnorrMusigSigner {
-        return createSigner(encodedPublicKeys: publicKeys.joined(), position: position)
+        let encodedKeys = publicKeys.reduce(into: Data()) { $0.append($1) }
+        return createSigner(encodedPublicKeys: encodedKeys, position: position)
     }
     
     public func createSigner(encodedPublicKeys: Data, position: Int) -> SchnorrMusigSigner {
