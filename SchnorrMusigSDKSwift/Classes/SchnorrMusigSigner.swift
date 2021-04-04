@@ -86,23 +86,6 @@ public class SchnorrMusigSigner {
             }
         }
     }
-    
-//    public AggregatedCommitment receiveCommitments(Collection<Commitment> commitments) throws SchnorrMusigException {
-//        byte[] commitmentsData = Bytes.joinStructData(commitments);
-//        AggregatedCommitment.ByReference aggregatedCommitment = new AggregatedCommitment.ByReference();
-//
-//        int code = this.musig.schnorr_musig_receive_commitments(this.signer.getPointer(), commitmentsData,
-//                commitmentsData.length, aggregatedCommitment);
-//
-//        SchnorrMusigResultCodes result = SchnorrMusigResultCodes.byCode(code);
-//
-//        if (result == SchnorrMusigResultCodes.OK) {
-//            return aggregatedCommitment;
-//        } else {
-//            throw new SchnorrMusigException(result);
-//        }
-//    }
-
 }
 
 extension Array where Element: SMPrimitive {

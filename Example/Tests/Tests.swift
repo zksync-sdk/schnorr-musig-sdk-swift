@@ -51,8 +51,6 @@ class Tests: XCTestCase {
         let signature = signer.sign(privateKey: privateKeyData, message: "hello".data(using: .utf8)!)
         XCTAssertEqual(signature.hexEncodedString().lowercased(),
                        expectedSignature)
-
-        
         
         XCTAssert(true, "Pass")
     }
