@@ -29,7 +29,7 @@ class SchnorrMusigTests: XCTestCase {
 
         let schnorrMuisig = SchnorrMusig()
         let signer = schnorrMuisig.createSigner(encodedPublicKeys: publicKeyData, position: 0)
-        let precommitment = signer.computePrecommitment(seed: Tests.Seed)
+        let precommitment = signer.computePrecommitment(seed: Self.Seed)
         XCTAssertEqual(precommitment.hexEncodedString().lowercased(),
                        expectedPrecommitment)
         let commitment = signer.receivePrecommitments([precommitment])
