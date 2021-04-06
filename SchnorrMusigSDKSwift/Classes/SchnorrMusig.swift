@@ -25,8 +25,8 @@ public class SchnorrMusig {
         }
     }
 
-    public func verify(message: Data, signature: SMAggregatedSignature, aggregatedPublicKeys: SMAggregatedPublicKey) throws -> Bool {
-        return try self.verify(message: message, signature: signature, encodedPublicKeys: aggregatedPublicKeys.data())
+    public func verify(message: Data, signature: SMAggregatedSignature, aggregatedPublicKey: SMAggregatedPublicKey) throws -> Bool {
+        return try self.verify(message: message, signature: signature, encodedPublicKeys: aggregatedPublicKey.data())
     }
     
     public func verify(message: Data, signature: SMAggregatedSignature, publicKeys: [Data]) throws -> Bool {
