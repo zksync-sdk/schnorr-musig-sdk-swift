@@ -18,11 +18,7 @@ public class SchnorrMusig {
     }
     
     public func createSigner(encodedPublicKeys: Data, position: Int) -> SchnorrMusigSigner {
-        encodedPublicKeys.withUnsafeBytes { (encodedPublicKeysRaw) in
-            let encodedPublicKeysBuffer = encodedPublicKeysRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
-            let musig = schnorr_musig_new_signer(encodedPublicKeysBuffer, encodedPublicKeys.count, position)
-            return SchnorrMusigSigner(signer: musig!)
-        }
+        return SchnorrMusigSigner(encodedPublicKeys: encodedPublicKeys, position: position)
     }
 
     public func verify(message: Data, signature: SMAggregatedSignature, aggregatedPublicKey: SMAggregatedPublicKey) throws -> Bool {

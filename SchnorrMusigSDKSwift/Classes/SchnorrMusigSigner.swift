@@ -11,8 +11,15 @@ public class SchnorrMusigSigner {
     
     private var signer: UnsafeMutablePointer<MusigSigner>
     
-    init(signer: UnsafeMutablePointer<MusigSigner>) {
-        self.signer = signer
+    init(encodedPublicKeys: Data, position: Int) {
+        self.signer = encodedPublicKeys.withUnsafeBytes { (encodedPublicKeysRaw) in
+            let encodedPublicKeysBuffer = encodedPublicKeysRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
+            return schnorr_musig_new_signer(encodedPublicKeysBuffer, encodedPublicKeys.count, position)!
+        }
+    }
+    
+    deinit {
+        schnorr_musig_delete_signer(signer)
     }
     
     public func sign(privateKey: Data, message: Data) throws -> SMSignature {
