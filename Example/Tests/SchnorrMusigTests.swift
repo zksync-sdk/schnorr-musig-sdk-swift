@@ -105,7 +105,7 @@ class SchnorrMusigTests: XCTestCase {
         
         XCTAssertTrue(try schnorrMusig.verify(message: Self.Msg, signature: aggregatedSignatures[0], encodedPublicKeys: allPublicKeys))
         
-        XCTAssertTrue(try schnorrMusig.verify(message: Self.Msg, signature: aggregatedSignatures[0], aggregatedPublicKeys: aggregatedPublicKey))
+        XCTAssertTrue(try schnorrMusig.verify(message: Self.Msg, signature: aggregatedSignatures[0], aggregatedPublicKey: aggregatedPublicKey))
     }
 }
 
