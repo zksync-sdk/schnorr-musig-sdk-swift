@@ -9,13 +9,13 @@ import Foundation
 
 public class SchnorrMusigSigner {
     
-    var signer: UnsafeMutablePointer<MusigSigner>
+    private var signer: UnsafeMutablePointer<MusigSigner>
     
     init(signer: UnsafeMutablePointer<MusigSigner>) {
         self.signer = signer
     }
     
-    func sign(privateKey: Data, message: Data) throws -> SMSignature {
+    public func sign(privateKey: Data, message: Data) throws -> SMSignature {
         
         var signature: Signature = Signature()
         
@@ -39,7 +39,7 @@ public class SchnorrMusigSigner {
         }
     }
     
-    func computePrecommitment(seed: [UInt32]) throws -> SMPrecommitment {
+    public func computePrecommitment(seed: [UInt32]) throws -> SMPrecommitment {
         try seed.withUnsafeBufferPointer { (seedRaw) in
             
             var precommitment = Precommitment()
@@ -56,11 +56,11 @@ public class SchnorrMusigSigner {
         }
     }
     
-    func receivePrecommitments(_ precommitments: SMPrecommitment...) throws -> SMCommitment {
+    public func receivePrecommitments(_ precommitments: SMPrecommitment...) throws -> SMCommitment {
         return try self.receivePrecommitments(precommitments)
     }
     
-    func receivePrecommitments(_ precommitments: [SMPrecommitment]) throws -> SMCommitment {
+    public func receivePrecommitments(_ precommitments: [SMPrecommitment]) throws -> SMCommitment {
         let data = precommitments.joinedData
         
         return try data.withUnsafeBytes { (raw) in
@@ -80,11 +80,11 @@ public class SchnorrMusigSigner {
         }
     }
     
-    func receiveCommitments(_ commitments: SMCommitment...) throws -> SMAggregatedCommitment {
+    public func receiveCommitments(_ commitments: SMCommitment...) throws -> SMAggregatedCommitment {
         return try self.receiveCommitments(commitments)
     }
     
-    func receiveCommitments(_ commitments: [SMCommitment]) throws -> SMAggregatedCommitment {
+    public func receiveCommitments(_ commitments: [SMCommitment]) throws -> SMAggregatedCommitment {
         let data = commitments.joinedData
         
         return try data.withUnsafeBytes { (raw) in
@@ -104,11 +104,11 @@ public class SchnorrMusigSigner {
         }
     }
     
-    func aggregateSignature(_ signatures: SMSignature...) throws -> SMAggregatedSignature {
+    public func aggregateSignature(_ signatures: SMSignature...) throws -> SMAggregatedSignature {
         return try self.aggregateSignature(signatures)
     }
     
-    func aggregateSignature(_ signatures: [SMSignature]) throws -> SMAggregatedSignature {
+    public func aggregateSignature(_ signatures: [SMSignature]) throws -> SMAggregatedSignature {
         let signaturesData = signatures.joinedData
         return try signaturesData.withUnsafeBytes { (signaturesRaw) in
             
