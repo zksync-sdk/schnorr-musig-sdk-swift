@@ -1,0 +1,16 @@
+PODS:
+  - SchnorrMusigSDKSwift (0.1.0)
+
+DEPENDENCIES:
+  - SchnorrMusigSDKSwift (from `../`)
+
+EXTERNAL SOURCES:
+  SchnorrMusigSDKSwift:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SchnorrMusigSDKSwift: 484d77cc3357f588e6e3649e2081f530a5d15f75
+
+PODFILE CHECKSUM: 415aff6972a08f2fe003f7f39c64666e8e1454e2
+
+COCOAPODS: 1.10.1
