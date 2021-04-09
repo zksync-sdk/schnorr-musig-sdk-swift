@@ -11,7 +11,7 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/zksync-sdk/schnorr-musig-sdk-swift'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'The Matter Labs team" => "hello@matterlabs.dev' }
+  s.author           = { "The Matter Labs team" => "hello@matterlabs.dev" }
   s.source           = { :git => 'https://github.com/zksync-sdk/schnorr-musig-sdk-swift.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
