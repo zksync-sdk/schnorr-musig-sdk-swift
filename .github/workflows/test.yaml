@@ -25,4 +25,4 @@ jobs:
 
     - name: Run tests
       working-directory: ./Example
-      run: xcodebuild -workspace SchnorrMusigSDKSwift.xcworkspace -scheme SchnorrMusigSDKSwift-Example -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.4' test
+      run: xcodebuild -quiet -workspace SchnorrMusigSDKSwift.xcworkspace -scheme SchnorrMusigSDKSwift-Example -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.4' test
