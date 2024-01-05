@@ -1,3 +1,5 @@
+#Deprecated and not recommended for use
+
 # SchnorrMusigSDKSwift
 
 [![CI Status](https://img.shields.io/travis/belyakove/SchnorrMusigSDKSwift.svg?style=flat)](https://travis-ci.org/belyakove/SchnorrMusigSDKSwift)
@@ -11,14 +13,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-## Installation
 
-SchnorrMusigSDKSwift is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod 'SchnorrMusigSDKSwift'
-```
 
 ## Author
 
